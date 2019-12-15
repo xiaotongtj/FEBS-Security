@@ -177,9 +177,11 @@ public class ExcelUtils {
             SXSSFRow headerRow = POIUtils.newSXSSFRow(sheet, 0);
             for (int i = 0; i < exportItems.size(); i++) {
                 SXSSFCell cell = POIUtils.newSXSSFCell(headerRow, i);
+                //todo width 是sheet设置
                 POIUtils.setColumnWidth(sheet, i, exportItems.get(i).getWidth(), exportItems.get(i).getDisplay());
                 cell.setCellValue(exportItems.get(i).getDisplay());
 
+                //todo cellStyle -->workBook
                 CellStyle style = handler.headCellStyle(wb);
                 if (style != null) {
                     cell.setCellStyle(style);
@@ -270,10 +272,14 @@ public class ExcelUtils {
             FileOutputStream out = new FileOutputStream(path);
             // 解决乱码
             out.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
+            // todo csvWriter
             CsvWriter csvWriter = new CsvWriter(out, ',', Charset.forName("UTF-8"));
             String[] csvHeadersArr = exportItems.stream().map(ExportItem::getDisplay).toArray(String[]::new);
+
+            //head信息
             csvWriter.writeRecord(csvHeadersArr);
             for (Object aData : data) {
+                //TODO csv的一行数据
                 List<Object> csvContent = new ArrayList<>();
                 for (ExportItem exportItem : exportItems) {
                     // 处理单元格值
